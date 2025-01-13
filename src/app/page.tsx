@@ -8,13 +8,13 @@ export default function Home() {
      <Santi/>
      <main className="pl-20">
       <div>
-        <h1 className="text-[42px] font-[family-name:var(--font-source-serif-4)]">Hi, I'm Evelyn.</h1>
+        <h1 className="text-[42px] font-[family-name:var(--font-source-serif-4)]">Hi, I&#39m Evelyn.</h1>
       </div>
       <br></br>
       <Fade delay={0}>Computer Science with minors in Neuroscience and Cognitive Science</Fade>
-      <Fade delay={800}>I'm interested in engineering intelligence + consciousness</Fade>
+      <Fade delay={800}>I&#39m interested in engineering intelligence + consciousness</Fade>
       <br></br>
-      <Fade delay={1600}>I've worked at: </Fade>
+      <Fade delay={1600}>I&#39ve worked at: </Fade>
       <div className="pt-2 ml-2 text-sm pb-24">
               <Fade delay={2400}>
                 <li>Graphistry Inc., AI Engineering Intern</li>

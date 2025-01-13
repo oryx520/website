@@ -2,7 +2,8 @@
 import React, { useEffect, useRef } from "react";
 
 const G = 6.67430e-11;
-const { innerWidth: canvasWidth, innerHeight: canvasHeight } = window;
+const canvasWidth = window.innerWidth;
+const canvasHeight = window.innerHeight;
 
 interface Body {
   x: number;
@@ -13,70 +14,79 @@ interface Body {
   color: string;
 }
 
-const getRandomPosition = (min: number, max: number): number => Math.random() * (max - min) + min;
-
-// Initialize bodies with randomized positions and a fixed mass
-const bodies: Body[] = Array.from({ length: 3 }, () => ({
-  x: getRandomPosition(0.45 * canvasWidth, 0.75 * canvasWidth),
-  y: getRandomPosition(0.35 * canvasHeight, 0.65 * canvasHeight),
-  vx: 0,
-  vy: 0,
-  mass: 8e10,
-  color: "grey"
-}));
+// Initial positions, velocities
+const getRandomPosition = (min: number, max: number): number => {
+    return Math.random() * (max - min) + min;
+  };
+  
+  const bodies: Body[] = [
+    { x: getRandomPosition(0.45 * canvasWidth, 0.75 * canvasWidth), 
+      y: getRandomPosition(0.35 * canvasHeight, 0.65 * canvasHeight), 
+      vx: 0, vy: 0, mass: 8e10, color: "grey" 
+    },
+    { x: getRandomPosition(0.45 * canvasWidth, 0.75 * canvasWidth), 
+      y: getRandomPosition(0.35 * canvasHeight, 0.65 * canvasHeight), 
+      vx: 0, vy: 0, mass: 8e10, color: "grey" 
+    },
+    { 
+ x: getRandomPosition(0.45 * canvasWidth, 0.5 * canvasWidth), 
+      y: getRandomPosition(0.35 * canvasHeight, 0.65 * canvasHeight), 
+      vx: 0, vy: 0, mass: 8e10, color: "grey" 
+    }
+  ];
 
 const Santi: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  // Calculate the gravitational force between two bodies
   const calculateForce = (body1: Body, body2: Body): { fx: number, fy: number } => {
     const dx = body2.x - body1.x;
     const dy = body2.y - body1.y;
-    const distance = Math.hypot(dx, dy);
+    const distance = Math.sqrt(dx * dx + dy * dy);
+  
     if (distance < 10) return { fx: 0, fy: 0 };
-
-    const force = (G * body1.mass * body2.mass) / (distance ** 2);
-    const fx = force * dx / distance;
+  
+    const force = (G * body1.mass * body2.mass) / (distance * distance);
+    const fx = force * dx / distance; // Gravitational force 
     const fy = force * dy / distance;
+  
     return { fx, fy };
-  };
-
-  // Update positions and velocities of bodies using Euler's method
-  const updateBodies = () => {
-    const forces = bodies.map(() => ({ fx: 0, fy: 0 }));
-
-    bodies.forEach((body1, i) => {
-      bodies.slice(i + 1).forEach((body2, j) => {
-        const { fx, fy } = calculateForce(body1, body2);
-        forces[i].fx += fx;
-        forces[i].fy += fy;
-        forces[i + j + 1].fx -= fx;  // Equal and opposite forces
-        forces[i + j + 1].fy -= fy;
-      });
-    });
-
-    bodies.forEach((body, i) => {
-      const { fx, fy } = forces[i];
-      const ax = fx / body.mass, ay = fy / body.mass;
-      body.vx += ax;
-      body.vy += ay;
-      body.x += body.vx;
-      body.y += body.vy;
-    });
   };
 
   // Draw the bodies on the canvas
   const draw = (ctx: CanvasRenderingContext2D) => {
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    bodies.forEach(({ x, y, color }) => {
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight); // Clear canvas
+    bodies.forEach((body) => {
       ctx.beginPath();
-      ctx.arc(x, y, 10, 0, Math.PI * 2);
-      ctx.fillStyle = color;
+      ctx.arc(body.x, body.y, 10, 0, Math.PI * 2); // Draw a circle for each body
+      ctx.fillStyle = body.color;
       ctx.fill();
     });
   };
 
   useEffect(() => {
+    // Update positions and velocities of the bodies using Euler's method
+    const updateBodies = () => {
+        const forces: { fx: number, fy: number }[] = bodies.map(() => ({ fx: 0, fy: 0 }));
+
+        for (let i = 0; i < bodies.length; i++) {
+        for (let j = i + 1; j < bodies.length; j++) {
+            const { fx, fy } = calculateForce(bodies[i], bodies[j]);
+            forces[i].fx += fx;
+            forces[i].fy += fy;
+            forces[j].fx -= fx; // Action and reaction are equal and opposite
+            forces[j].fy -= fy;
+        }
+        }
+        for (let i = 0; i < bodies.length; i++) {
+        const ax = forces[i].fx / bodies[i].mass; // Acceleration in x direction
+        const ay = forces[i].fy / bodies[i].mass; // Acceleration in y direction
+        bodies[i].vx += ax;
+        bodies[i].vy += ay;
+        bodies[i].x += bodies[i].vx;
+        bodies[i].y += bodies[i].vy;
+        }
+    };
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -89,7 +99,11 @@ const Santi: React.FC = () => {
       requestAnimationFrame(animate);
     };
 
-    animate();
+    animate(); 
+    const animationFrameId = requestAnimationFrame(animate);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
   }, []);
 
   return <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight} />;

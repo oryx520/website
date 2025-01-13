@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 
 const G = 6.67430e-11;
 const canvasWidth = 2000;
-const canvasHeight = 1000;
+const canvasHeight = 500;
 
 interface Body {
   x: number;

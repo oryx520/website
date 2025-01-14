@@ -2,8 +2,9 @@
 import React, { useEffect, useRef } from "react";
 
 const G = 6.67430e-11;
-const canvasWidth = 2000;
-const canvasHeight = 1000;
+const bodyColour = "rgba(164, 164, 164)";
+const canvasWidth = 1400;
+const canvasHeight = 600;
 
 interface Body {
   x: number;

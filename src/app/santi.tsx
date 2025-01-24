@@ -21,16 +21,16 @@ const getRandomPosition = (min: number, max: number): number => {
 };
 
 const bodies: Body[] = [
-  { x: getRandomPosition(0.55 * canvasWidth, 0.65 * canvasWidth), 
+  { x: getRandomPosition(0.65 * canvasWidth, 0.75 * canvasWidth), 
     y: getRandomPosition(0.45 * canvasHeight, 0.5 * canvasHeight), 
     vx: 0, vy: 0, mass: 8e10, color: bodyColour, impressions: [] 
   },
-  { x: getRandomPosition(0.5 * canvasWidth, 0.55 * canvasWidth), 
-    y: getRandomPosition(0.5 * canvasHeight, 0.55 * canvasHeight), 
+  { x: getRandomPosition(0.6 * canvasWidth, 0.65 * canvasWidth), 
+    y: getRandomPosition(0.55 * canvasHeight, 0.6 * canvasHeight), 
     vx: 0, vy: 0, mass: 8e10, color: bodyColour, impressions: [] 
   },
-  { x: getRandomPosition(0.55 * canvasWidth, 0.65 * canvasWidth), 
-    y: getRandomPosition(0.5 * canvasHeight, 0.55 * canvasHeight), 
+  { x: getRandomPosition(0.65 * canvasWidth, 0.75 * canvasWidth), 
+    y: getRandomPosition(0.55 * canvasHeight, 0.6 * canvasHeight), 
     vx: 0, vy: 0, mass: 8e10, color: bodyColour, impressions: [] 
   }
 ];
